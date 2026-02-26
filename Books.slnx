@@ -1,6 +1,10 @@
 <Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/Books.WebAPI/Books.WebAPI.csproj" />
+  </Folder>
   <Folder Name="/editorconfig/">
     <File Path=".editorconfig" />
+    <File Path="backend/.editorconfig" />
   </Folder>
   <Folder Name="/git/">
     <File Path=".gitattributes" />
