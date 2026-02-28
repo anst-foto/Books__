@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Управление книгами</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <h1>Книги</h1>
+
+  <!-- Форма добавления книги -->
+  <section class="add-book">
+    <h2>Добавить новую книгу</h2>
+    <form id="addBookForm">
+      <label for="title">Название книги *</label>
+      <input type="text" id="title" name="title" placeholder="Введите название" required>
+      <button type="submit">Добавить</button>
+    </form>
+    <div id="formError" class="error-message"></div>
+  </section>
+
+  <!-- Список книг -->
+  <section class="book-list">
+    <h2>Список книг</h2>
+    <div id="booksContainer">
+      <!-- Книги будут загружаться сюда -->
+      <p class="loading">Загрузка...</p>
+    </div>
+    <div id="listError" class="error-message"></div>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

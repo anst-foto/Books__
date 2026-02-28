@@ -13,7 +13,10 @@
     <File Path="backend/.editorconfig" />
   </Folder>
   <Folder Name="/frontend/">
+    <File Path="frontend/index.html" />
+    <File Path="frontend/script.js" />
     <File Path="frontend/spec.json" />
+    <File Path="frontend/style.css" />
   </Folder>
   <Folder Name="/git/">
     <File Path=".gitattributes" />
