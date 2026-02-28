@@ -12,6 +12,9 @@
     <File Path=".editorconfig" />
     <File Path="backend/.editorconfig" />
   </Folder>
+  <Folder Name="/frontend/">
+    <File Path="frontend/spec.json" />
+  </Folder>
   <Folder Name="/git/">
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
