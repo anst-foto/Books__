@@ -2,6 +2,12 @@
   <Folder Name="/backend/">
     <Project Path="backend/Books.WebAPI/Books.WebAPI.csproj" />
   </Folder>
+  <Folder Name="/docker/">
+    <File Path=".dockerignore" />
+    <File Path=".env" />
+    <File Path="compose.Development.yaml" />
+    <File Path="compose.yaml" />
+  </Folder>
   <Folder Name="/editorconfig/">
     <File Path=".editorconfig" />
     <File Path="backend/.editorconfig" />

@@ -1,23 +1,41 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+# syntax=docker/dockerfile:1
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["backend/ConsoleApp1/ConsoleApp1.csproj", "backend/ConsoleApp1/"]
-RUN dotnet restore "backend/ConsoleApp1/ConsoleApp1.csproj"
-COPY . .
-WORKDIR "/src/backend/ConsoleApp1"
-RUN dotnet build "./ConsoleApp1.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+# Restore dependencies first for better layer caching
+COPY ["backend/Books.WebAPI/Books.WebAPI.csproj", "backend/Books.WebAPI/"]
+RUN dotnet restore "backend/Books.WebAPI/Books.WebAPI.csproj"
+
+# Copy remaining source and build
+COPY . .
+WORKDIR "/src/backend/Books.WebAPI"
+RUN dotnet build "Books.WebAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build --no-restore
+
+# Publish to optimized output
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./ConsoleApp1.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Books.WebAPI.csproj" \
+    -c $BUILD_CONFIGURATION \
+    -o /app/publish \
+    /p:UseAppHost=false \
+    /p:DebugType=none \
+    /p:DebugSymbols=false
 
-FROM base AS final
+# Runtime stage - keep small and secure
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine AS runtime
+ARG APP_UID=1000
+RUN addgroup -g $APP_UID appgroup && adduser -D -u $APP_UID -G appgroup appuser
+
 WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ConsoleApp1.dll"]
+EXPOSE 8080
+
+# Copy published app from publish stage
+COPY --from=publish --chown=appuser:appgroup /app/publish .
+
+# Health check for orchestration systems
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
+
+USER appuser
+ENTRYPOINT ["dotnet", "Books.WebAPI.dll"]
