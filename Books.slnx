@@ -22,4 +22,8 @@
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
   </Folder>
+  <Folder Name="/github/">
+    <File Path=".github/workflows/ci.yml" />
+    <File Path=".github/workflows/docker-publish.yml" />
+  </Folder>
 </Solution>
