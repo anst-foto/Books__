@@ -1,0 +1,13 @@
+{
+  "name": "books-frontend",
+  "version": "1.0.0",
+  "main": "index.html",
+  "scripts": {
+    "build:less": "lessc styles.less styles.css",
+    "browser": "explorer index.html",
+    "run": "npm run build:less && npm run browser"
+  },
+  "devDependencies": {
+    "less": "^4.2.0"
+  }
+}

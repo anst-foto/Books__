@@ -1,0 +1,175 @@
+﻿@import "colors.less";
+
+.border-radius(@radius: 4px){
+  border-radius: @radius;
+}
+
+/* Общие стили */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: @body-bg;
+  margin: 0;
+  padding: 20px;
+  color: @text-primary;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: @container-bg;
+  .border-radius(8px);
+  box-shadow: 0 2px 10px @shadow-color;
+  padding: 25px;
+}
+
+h1 {
+  margin-top: 0;
+  color: @text-dark;
+  border-bottom: 2px solid @border-light;
+  padding-bottom: 10px;
+}
+
+h2 {
+  font-size: 1.3rem;
+  color: @text-dark;
+  margin-bottom: 15px;
+}
+
+/* Форма */
+.add-book {
+  background-color: @add-book-bg;
+  padding: 20px;
+  .border-radius(6px);
+  margin-bottom: 30px;
+  border-left: 4px solid @primary;
+
+  & form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  & label {
+    flex: 1 1 100%;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: @text-dark;
+  }
+
+  & input {
+    flex: 3 1 200px;
+    padding: 10px 12px;
+    border: 1px solid @input-border;
+    .border-radius();
+    font-size: 1rem;
+    transition: border 0.2s;
+
+    &:focus {
+      border-color: @primary;
+      outline: none;
+      box-shadow: 0 0 0 2px @input-focus-shadow;
+    }
+  }
+
+  & button {
+    flex: 1 1 auto;
+    background-color: @primary;
+    color: @white;
+    border: none;
+    padding: 10px 20px;
+    .border-radius();
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: @primary-dark;
+    }
+  }
+}
+
+/* Список книг */
+.book-list {
+  margin-top: 20px;
+}
+
+#booksContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.book {
+  &-card {
+    background-color: @white;
+    border: 1px solid @book-card-border;
+    .border-radius(6px);
+    padding: 15px;
+    box-shadow: 0 1px 3px @shadow-light;
+    transition: transform 0.1s, box-shadow 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px @book-card-hover-shadow;
+    }
+  }
+
+  &-id {
+    font-size: 0.75rem;
+    color: @text-muted;
+    margin-bottom: 5px;
+    word-break: break-all;
+  }
+
+  &-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: @text-dark;
+    margin: 0;
+  }
+}
+
+.empty-message {
+  text-align: center;
+  color: @text-muted;
+  font-style: italic;
+  padding: 20px;
+  background-color: @empty-message-bg;
+  .border-radius();
+}
+
+.loading {
+  text-align: center;
+  color: @text-muted;
+  padding: 20px;
+}
+
+.error-message {
+  color: @text-error;
+  background-color: @error-bg;
+  border-left: 4px solid @error-border;
+  padding: 10px 15px;
+  .border-radius();
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+  .add-book {
+    & form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    & button {
+      width: 100%;
+    }
+  }
+
+  #booksContainer {
+    grid-template-columns: 1fr;
+  }
+}

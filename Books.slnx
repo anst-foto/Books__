@@ -13,10 +13,13 @@
     <File Path="backend/.editorconfig" />
   </Folder>
   <Folder Name="/frontend/">
+    <File Path="frontend/colors.less" />
     <File Path="frontend/index.html" />
+    <File Path="frontend/package.json" />
     <File Path="frontend/script.js" />
     <File Path="frontend/spec.json" />
-    <File Path="frontend/style.css" />
+    <File Path="frontend/styles.css" />
+    <File Path="frontend/styles.less" />
   </Folder>
   <Folder Name="/git/">
     <File Path=".gitattributes" />

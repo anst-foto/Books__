@@ -1,0 +1,37 @@
+﻿// =========================
+// Цветовая палитра проекта
+// =========================
+
+// Базовые цвета
+@white: #ffffff;
+@black: #00005c;
+
+// Основные акцентные цвета
+@primary: #db34d3;          // синий (действия, акценты)
+@primary-dark: #4829b9;     // тёмно-синий (hover)
+@danger: #e74c3c;           // красный (ошибки)
+
+// Фоны
+@body-bg: #f8f9fa;
+@container-bg: @white;
+@add-book-bg: #f1f9ff;
+@empty-message-bg: #f9f9f9;
+@error-bg: #fadbd8;
+
+// Текст
+@text-primary: #333;        // основной текст
+@text-dark: #2c3e50;        // заголовки, жирный текст
+@text-muted: #7f8c8d;       // второстепенный текст (id, пусто, загрузка)
+@text-error: @danger;       // текст ошибок
+
+// Границы
+@border-light: #ecf0f1;     // подчёркивание заголовка
+@input-border: #bdc3c7;     // рамка поля ввода
+@book-card-border: #e0e0e0; // рамка карточки книги
+@error-border: @danger;     // рамка сообщения об ошибке
+
+// Тени (полупрозрачные)
+@shadow-color: fade(@black, 10%);      // тень контейнера
+@shadow-light: fade(@black, 5%);       // лёгкая тень карточки
+@book-card-hover-shadow: fade(@black, 10%);
+@input-focus-shadow: fade(@primary, 20%); // свечение при фокусе
