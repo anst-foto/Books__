@@ -25,6 +25,29 @@
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    container_name: ${PREFIX}_redis_container
+    image: redis:${REDIS_VERSION}
+    ports:
+      - "${REDIS_PORT_HOST}:${REDIS_PORT_CONTAINER}"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - postgres
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
   webapi:
     container_name: ${PREFIX}_webapi_container
     image: ${WEBAPI_IMAGE}:${WEBAPI_VERSION}
@@ -34,6 +57,8 @@
       ASPNETCORE_ENVIRONMENT: Production
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: unless-stopped
     deploy:
@@ -56,3 +81,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:

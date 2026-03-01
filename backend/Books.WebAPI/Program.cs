@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 
 using Books.WebAPI.Models;
+using Books.WebAPI.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -17,8 +19,19 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
 if (string.IsNullOrEmpty(connectionString))
-    throw new Exception("No Connection String");
+    throw new DbConnectionStringException("Отсутствует строка подключения к БД");
 builder.Services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
+
+var redisConnection = builder.Configuration.GetConnectionString("Redis");
+if (string.IsNullOrEmpty(connectionString))
+    throw new RedisConnectionStringException("Отсутствует строка подключения к Redis");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnection;
+});
+
+builder.Services.AddScoped<IBookService, BookServiceDb>();
+builder.Services.AddScoped<BookServiceCache>();
 
 builder.Services.AddCors(options =>
 {
@@ -55,22 +68,41 @@ app.UseCors(corsPolicyName);
 
 var api = app.MapGroup($"/api/{versionApi}/books")
     .WithTags("Books");
-api.MapGet("/", async (DataBaseContext db) =>
+
+api.MapGet("/", async (BookServiceCache service) =>
     {
-        var books = await db.Books.ToArrayAsync();
-        return books.Length == 0
+        var books = await service.GetAllAsync();
+        var enumerable = books as Book[] ?? books.ToArray();
+        return enumerable.Length == 0
             ? Results.NoContent()
-            : Results.Ok(books);
+            : Results.Ok(enumerable);
     }).WithName("GetAll")
     .Produces(StatusCodes.Status204NoContent)
     .Produces<Book[]>(StatusCodes.Status200OK);
 
-api.MapPost("/", async (Book book, DataBaseContext db) =>
+api.MapGet("/{id:guid}", async (Guid id, BookServiceCache service) =>
     {
         try
         {
-            await db.Books.AddAsync(book);
-            await db.SaveChangesAsync();
+            var book = await service.GetByIdAsync(id);
+            return book is null
+                ? Results.NotFound()
+                : Results.Ok(book);
+        }
+        catch (Exception e)
+        {
+            return Results.InternalServerError(e.Message);
+        }
+    }).WithName("GetById")
+    .Produces<Book>(StatusCodes.Status200OK)
+    .Produces(StatusCodes.Status404NotFound)
+    .Produces(StatusCodes.Status500InternalServerError);
+
+api.MapPost("/", async (Book book, BookServiceCache service) =>
+    {
+        try
+        {
+            await service.AddNewAsync(book);
 
             return Results.Created();
         }
